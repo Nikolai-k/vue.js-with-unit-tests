@@ -25,7 +25,9 @@
         <a href="/"><img src="/logo.png" alt="ГдеМатериал.Ру"></a> <!--TODO(iNerV) do dynamically link-->
       </div>
       <div class="main-navigation__burger">
-        <button class="main-navigation__open-menu-btn">
+        <button
+          @click="onOpenMenuBtnClick"
+          class="main-navigation__open-menu-btn">
           Menu
         </button>
       </div>
@@ -41,67 +43,43 @@
         </li>
       </ul>
     </nav>
-    <ul class="site-navigation">
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category2</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category3</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category4</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category5</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category6</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category7</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category8</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category9</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category10</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category11</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category12</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category13</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category14</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category15</a>
-      </li>
-      <li class="site-navigation__item">
-        <a class="site-navigation__link" href="/">Category16</a>
-      </li>
-    </ul>
+    <transition name="fade">
+      <MobileMenu v-show="menuShowed"/>
+    </transition>
   </header>
 </template>
 
 <script>
+import MobileMenu from './MobileMenu.vue';
+
 export default {
   name: 'PageHeader',
+  components: {
+    MobileMenu,
+  },
+  computed: {
+    menuShowed() {
+      return this.$store.state.the_menu.menu_is_visible;
+    },
+  },
+  methods: {
+    onOpenMenuBtnClick() {
+      this.$store.commit('the_menu/SET_MENU_VISIBLE', !this.menuShowed);
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "~assets/variables.scss";
+
+.fade-enter-active, .fade-leave-active {
+  transition: .3s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateX(-30px);
+}
 
 .top-bar {
   display: flex;
@@ -208,80 +186,6 @@ export default {
 
   &__item:not(:first-child) {
     margin-left: 15px;
-  }
-}
-
-.site-navigation {
-  display: flex;
-  flex-direction: column;
-  grid-area: site-navigation;
-  list-style-type: none;
-  width: 100%;
-  height: calc(100vh - 153px);
-  background: rgb(255, 255, 255);
-  overflow-y: scroll;
-  z-index: 1;
-  padding-left: 0;
-  display: none;
-
-  &__item {
-    display: block;
-    width: 100%;
-    height: 47px;
-    position: relative;
-    color: #333;
-    padding: .75rem 1rem;
-
-    &:hover,
-    &:active {
-      background-color: rgb(130, 0, 255);
-      color: rgb(255, 255, 255);
-    }
-  }
-
-  &__grid {
-    display: grid;
-    grid-template-rows: 90px 90px;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    list-style-type: none;
-    padding: 0;
-  }
-
-  &__grid-item {
-    display: flex;
-    align-items: center;
-    position: relative;
-    height: 100%;
-    text-align: center;
-    color: rgb(130, 0, 255);
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-  }
-
-  &__link {
-    display: block;
-    width: 100%;
-    color: inherit;
-
-    &:hover,
-    &:active {
-      color: rgb(255, 255, 255);
-    }
-
-    &--special {
-      display: flex;
-      align-items: center;
-      position: absolute;
-      padding-left: 50%;
-      left: -10%;
-      height: 100%;
-
-      &:hover,
-      &:active {
-        color: inherit;
-      }
-    }
   }
 }
 </style>
